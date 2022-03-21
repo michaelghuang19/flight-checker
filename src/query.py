@@ -28,7 +28,7 @@ def create_query(departureDate, returnDate, destination, origin='LHR', adults=2,
     }
 
 
-def get_data_response(querystring, file):
+def write_data_response(querystring, file):
     response = requests.request(
         'GET', API_URL, headers=headers, params=querystring).json()['itineraries']
 
@@ -40,24 +40,22 @@ def get_data_response(querystring, file):
             # add price
             result.append(str(flight['price']['raw']))
             for leg in flight['legs']:
-                # add dates, times, and carrie`r
+                # add dates, times, and carrier
                 result.append(leg['departure'][0:10])
                 result.append(leg['departure'][11:])
                 result.append(leg['arrival'][11:])
                 result.append(leg['carriers']['marketing'][0]['name'])
             file.write(','.join(result) + '\n')
 
-
 def main():
     for city in input_dict['cities']:
-        file = open('../output/' + city + '.csv', 'w')
+        file = open('../output/' + city + '_' + TODAYS_DATE + '.csv', 'w')
         file.write(','.join(CSV_HEADERS) + '\n')
         for datePair in input_dict['flightDatePairs']:
             query_string = create_query(datePair[0], datePair[1], city)
-            response = get_data_response(query_string, file)
-            break
+            print(query_string)
+            write_data_response(query_string, file)
         file.close()
-        break
 
 
 if __name__ == "__main__":
