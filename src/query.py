@@ -1,4 +1,3 @@
-import csv
 import datetime
 import json
 import requests
@@ -41,6 +40,7 @@ def get_data_response(querystring, file):
             break
         else:
             # due to nature of the API
+            print("incomplete, so sleeping...")
             sleep(30)
 
     # for a bit more responsiveness
